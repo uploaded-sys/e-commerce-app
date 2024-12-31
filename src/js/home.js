@@ -1,28 +1,52 @@
-// Add this at the top of the file
-const cart = new Cart();
-
 class Cart {
     constructor() {
-        this.items = this.loadCart();
+        this.items = [];
+        this.loadCart();
         this.updateCartUI();
         this.displayCart();
     }
 
     loadCart() {
-        const savedCart = localStorage.getItem('cart');
-        return savedCart ? JSON.parse(savedCart) : [];
+        try {
+            const savedCart = localStorage.getItem('shopping-cart');
+            if (savedCart) {
+                this.items = JSON.parse(savedCart);
+                console.log('Cart loaded:', this.items);
+            }
+        } catch (error) {
+            console.error('Error loading cart:', error);
+            this.items = [];
+            localStorage.removeItem('shopping-cart');
+        }
+    }
+
+    saveCart() {
+        try {
+            localStorage.setItem('shopping-cart', JSON.stringify(this.items));
+            console.log('Cart saved:', this.items);
+        } catch (error) {
+            console.error('Error saving cart:', error);
+            this.showNotification('Error saving cart');
+        }
     }
 
     addItem(product) {
-        const existingItem = this.items.find(item => item.id === product.id);
-        if (existingItem) {
-            existingItem.quantity += 1;
-        } else {
-            this.items.push({ ...product, quantity: 1 });
+        try {
+            const existingItem = this.items.find(item => item.id === product.id);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                this.items.push({ ...product, quantity: 1 });
+            }
+            this.saveCart();
+            this.updateCartUI();
+            this.displayCart();
+            return true;
+        } catch (error) {
+            console.error('Error adding item:', error);
+            this.showNotification('Error adding item to cart');
+            return false;
         }
-        this.saveCart();
-        this.updateCartUI();
-        this.displayCart();
     }
 
     removeItem(productId) {
@@ -43,10 +67,6 @@ class Cart {
         this.saveCart();
         this.updateCartUI();
         this.displayCart();
-    }
-
-    saveCart() {
-        localStorage.setItem('cart', JSON.stringify(this.items));
     }
 
     updateCartUI() {
@@ -141,6 +161,10 @@ class Cart {
         alert('Proceeding to checkout...');
         // Add checkout logic here
     }
+
+    showNotification(message) {
+        showNotification(message);
+    }
 }
 
 function renderProduct(product) {
@@ -186,3 +210,8 @@ function showNotification(message) {
         notification.remove();
     }, 2000);
 }
+
+// Move cart initialization to DOMContentLoaded event
+document.addEventListener('DOMContentLoaded', () => {
+    window.cart = new Cart();
+});
