@@ -30,6 +30,7 @@ about.innerHTML = `
                 </div>
             </div>
             <h1>Proudly made by INDIANS</h1>
+            <h2><a href='../index.html'>back to dashboard</a></h2>
         </div>
     </section>
 `;

@@ -2,6 +2,12 @@
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px;
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .cart-empty {
@@ -9,12 +15,19 @@
     padding: 40px;
     font-size: 1.2em;
     color: #666;
+    animation: slideIn 0.4s ease-out;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(-100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
 }
 
 .cart-items {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    perspective: 1000px;
 }
 
 .cart-item {
@@ -23,6 +36,13 @@
     padding: 15px;
     border: 1px solid #ddd;
     border-radius: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-origin: center;
+}
+
+.cart-item:hover {
+    transform: translateY(-5px) scale(1.01);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
 .cart-item img {
@@ -30,10 +50,16 @@
     height: 100px;
     object-fit: cover;
     margin-right: 20px;
+    transition: transform 0.3s ease;
+}
+
+.cart-item img:hover {
+    transform: scale(1.1);
 }
 
 .item-details {
     flex-grow: 1;
+    transition: transform 0.2s ease;
 }
 
 .cart-total {
@@ -41,6 +67,12 @@
     padding: 20px;
     border-top: 2px solid #ddd;
     text-align: right;
+    animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+    from { transform: translateY(20px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
 }
 
 button {
@@ -50,11 +82,85 @@ button {
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
 }
 
 button:hover {
     background-color: #0056b3;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,123,255,0.3);
 }
+
+button:active {
+    transform: translateY(0);
+}
+
+button::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255,255,255,0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    transition: width 0.6s ease-out, height 0.6s ease-out;
+}
+
+button:active::after {
+    width: 200%;
+    height: 200%;
+}
+
+.remove-item {
+    opacity: 0.9;
+    transition: all 0.2s ease;
+}
+
+.remove-item:hover {
+    opacity: 1;
+    background-color: #dc3545;
+    transform: scale(1.05);
+}
+
+/* Add animation for cart items being removed */
+.cart-item.removing {
+    animation: removeItem 0.5s ease-out forwards;
+}
+
+@keyframes removeItem {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(0.9) translateX(10px); opacity: 0.5; }
+    100% { transform: scale(0) translateX(-100%); opacity: 0; }
+}
+
+/* Checkout button special effects */
+#checkoutButton {
+    background: linear-gradient(45deg, #007bff, #00bcd4);
+    background-size: 200% auto;
+    transition: all 0.3s ease;
+}
+
+#checkoutButton:hover {
+    background-position: right center;
+}
+
+/* Add loading animation for processing state */
+@keyframes processing {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+#checkoutButton:disabled {
+    background: linear-gradient(45deg, #007bff, #00bcd4, #007bff);
+    background-size: 200% auto;
+    animation: processing 2s linear infinite;
+}
+
 a{
     text-decoration: none;
     color: white;
