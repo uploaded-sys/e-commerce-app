@@ -3,6 +3,8 @@ let currentPage = 0;
 const productsPerPage = 10;
 let allProducts = [];
 
+// Remove currency converter
+
 async function getData() {
     try {
         const response = await fetch('https://dummyjson.com/products?limit=198');
@@ -64,5 +66,19 @@ getData();
 
 function addToCart(productId) {
     console.log('Added product to cart:', productId);
-    // Implement cart functionality here
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const product = allProducts.find(p => p.id === productId);
+    
+    if (product) {
+        const existingProduct = cart.find(item => item.id === productId);
+        if (existingProduct) {
+            existingProduct.quantity += 1;
+        } else {
+            cart.push({...product, quantity: 1});
+        }
+        localStorage.setItem('cart', JSON.stringify(cart));
+        alert(`${product.title} has been added to your cart.`);
+    } else {
+        console.error('Product not found:', productId);
+    }
 }

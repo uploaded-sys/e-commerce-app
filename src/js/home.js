@@ -8,7 +8,7 @@ class Cart {
 
     loadCart() {
         try {
-            const savedCart = localStorage.getItem('shopping-cart');
+            const savedCart = localStorage.getItem('cart'); // Changed from 'shopping-cart' to 'cart'
             if (savedCart) {
                 this.items = JSON.parse(savedCart);
                 console.log('Cart loaded:', this.items);
@@ -16,13 +16,13 @@ class Cart {
         } catch (error) {
             console.error('Error loading cart:', error);
             this.items = [];
-            localStorage.removeItem('shopping-cart');
+            localStorage.removeItem('cart');
         }
     }
 
     saveCart() {
         try {
-            localStorage.setItem('shopping-cart', JSON.stringify(this.items));
+            localStorage.setItem('cart', JSON.stringify(this.items)); // Changed from 'shopping-cart' to 'cart'
             console.log('Cart saved:', this.items);
         } catch (error) {
             console.error('Error saving cart:', error);
@@ -99,17 +99,17 @@ class Cart {
 
         container.innerHTML = this.items.map(item => `
             <div class="cart-item">
-                <img src="${item.image}" alt="${item.name}">
+                <img src="${item.thumbnail}" alt="${item.title}">
                 <div class="cart-item-details">
-                    <h3>${item.name}</h3>
+                    <h3>${item.title}</h3>
                     <p class="product-price">$${item.price.toFixed(2)} × ${item.quantity}</p>
                     <p>Total: $${(item.price * item.quantity).toFixed(2)}</p>
                 </div>
                 <div class="cart-item-actions">
-                    <button onclick="cart.updateQuantity('${item.id}', ${item.quantity - 1})">-</button>
+                    <button onclick="cart.updateQuantity(${item.id}, ${item.quantity - 1})">-</button>
                     <span>${item.quantity}</span>
-                    <button onclick="cart.updateQuantity('${item.id}', ${item.quantity + 1})">+</button>
-                    <button onclick="cart.removeItem('${item.id}')" class="remove-btn">Remove</button>
+                    <button onclick="cart.updateQuantity(${item.id}, ${item.quantity + 1})">+</button>
+                    <button onclick="cart.removeItem(${item.id})" class="remove-btn">Remove</button>
                 </div>
             </div>
         `).join('');
@@ -158,7 +158,7 @@ class Cart {
     }
 
     checkout() {
-        alert('Proceeding to checkout...');
+        alert('Proceeding to checkout... thanks for shopping with us!. items will be dillivered in few days');
         // Add checkout logic here
     }
 
